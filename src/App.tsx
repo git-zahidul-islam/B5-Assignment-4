@@ -2,7 +2,6 @@ import { Outlet, useLocation } from "react-router";
 import Navbar from "./layout/Navbar";
 import Footer from "./layout/Footer";
 import HeroSection from "./components/HeroSection";
-import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const location = useLocation()
