@@ -1,6 +1,14 @@
 import Loading from "../components/Loading";
 import { useGetBorrowSummaryQuery } from "../redux/api/baseApi";
 
+interface IbookSummery {
+  book: {
+    title: string,
+    isbn : string
+  },
+  totalQuantity : number
+}
+
 const BorrowSummery = () => {
 
   const { data: BookSummary = [], isLoading, isError } = useGetBorrowSummaryQuery({})
@@ -17,7 +25,7 @@ const BorrowSummery = () => {
   };
 
   const totalBooks = booksData.length;
-  const totalBorrowings = booksData.reduce((sum, book) => sum + book.totalQuantity, 0);
+  const totalBorrowings = booksData.reduce((sum : number , book : IbookSummery ) => sum + book.totalQuantity, 0);
   const averageBorrowings = Math.round(totalBorrowings / totalBooks);
 
   return (
@@ -74,8 +82,8 @@ const BorrowSummery = () => {
             <tbody className="divide-y divide-gray-200">
               {booksData.length > 0 ? (
                 booksData
-                  .map((book, index: number) => (
-                    <tr key={book.isbn} className="hover:bg-gray-50 transition">
+                  .map((book : IbookSummery, index:number) => (
+                    <tr key={index} className="hover:bg-gray-50 transition">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-gray-900 truncate max-w-xs">{book?.book.title}</span>
@@ -96,7 +104,7 @@ const BorrowSummery = () => {
                   ))
               ) : (
                 <tr>
-                  <td colSpan="3" className="px-4 py-8 text-center text-gray-500">
+                  <td className="px-4 py-8 text-center text-gray-500 col-span-3">
                     No books found.
                   </td>
                 </tr>
