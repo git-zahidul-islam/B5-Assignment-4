@@ -45,7 +45,7 @@ const AllBooks = () => {
   }
 
   return (
-    <div className="mx-auto max-w-6xl py-8 px-4">
+    <div className="mx-auto max-w-6xl py-8 px-4 min-h-[80vh]">
       <h1 className="text-3xl font-bold mb-6 text-center">All Books</h1>
       <div className="overflow-x-auto rounded shadow">
         <table className="min-w-full divide-y divide-gray-200 bg-white">
