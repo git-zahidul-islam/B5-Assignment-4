@@ -6,10 +6,10 @@ import {
   Hash,
   FileText,
   Copy,
-  // CheckCircle, // Removed as available checkbox is removed
 } from "lucide-react";
 import { useCreateBooksMutation } from "../redux/api/baseApi";
 import type { IBook } from "../types";
+import toast from "react-hot-toast";
 
 const initialForm: IBook = {
   title: "",
@@ -23,14 +23,13 @@ const initialForm: IBook = {
 
 const AddBook = () => {
   const [form, setForm] = useState<IBook>(initialForm);
-  const [createBook, { isLoading, isSuccess, isError, error }] =
+  const [createBook, { isLoading }] =
     useCreateBooksMutation();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target; 
-
+    const { name, value } = e.target;
 
     setForm((prev) => ({
       ...prev,
@@ -46,8 +45,10 @@ const AddBook = () => {
     try {
       await createBook(form).unwrap();
       setForm(initialForm);
+      toast.success("Book added successfully!"); // Success toast
     } catch (err) {
       console.log("Failed to add book:", err);
+      toast.error("Failed to add book. Please try again."); // Error toast
     }
   };
 
@@ -195,7 +196,6 @@ const AddBook = () => {
                   className="w-full h-11 px-4 border-2 border-gray-200 rounded-lg focus:border-teal-500 focus:outline-none transition-colors duration-200 bg-white"
                 />
               </div>
-
             </div>
 
             <div className="pt-6">
@@ -216,7 +216,8 @@ const AddBook = () => {
                   </>
                 )}
               </button>
-              {isSuccess && (
+              {/* You can remove these div elements as toast will handle the messages */}
+              {/* {isSuccess && (
                 <div className="text-green-600 mt-2">
                   Book added successfully!
                 </div>
@@ -225,7 +226,7 @@ const AddBook = () => {
                 <div className="text-red-600 mt-2">
                   Failed to add book. {("data" in (error as { data?: { message?: string } }) ? (error as { data?: { message?: string } }).data?.message : "") || ""}
                 </div>
-              )}
+              )} */}
             </div>
           </form>
         </div>

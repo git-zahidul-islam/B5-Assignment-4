@@ -5,6 +5,7 @@ import {
   useGetBookByIdQuery,
 } from "../redux/api/baseApi";
 import Loading from "./Loading";
+import toast from "react-hot-toast";
 
 const BorrowForm = () => {
   const { bookId } = useParams();
@@ -21,7 +22,7 @@ const BorrowForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!book || quantity > book.copies) {
-      alert("Quantity exceeds available copies.");
+      toast.success("Quantity exceeds available copies.");
       return;
     }
 
@@ -31,10 +32,10 @@ const BorrowForm = () => {
         quantity,
         dueDate,
       }).unwrap();
-      alert("Borrowed successfully!");
+      toast.success('Borrowed successfully!')
       navigate("/borrow-summary");
     } catch (err) {
-      alert("Borrow failed.");
+      toast.success('Borrow failed.')
       console.error("Borrow error:", err);
     }
   };

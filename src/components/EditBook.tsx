@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useGetBookByIdQuery, useUpdateBookMutation } from "../redux/api/baseApi";
 import type { IBook } from "../types";
 import Loading from "./Loading";
+import toast from "react-hot-toast";
 
 const EditBook = () => {
   const { id } = useParams<{ id: string }>();
@@ -53,10 +54,10 @@ const EditBook = () => {
 
     try {
       await updateBook({ id: id!, ...formData }).unwrap();
-      alert("Book updated successfully!");
+      toast.success("Book updated successfully!");
       navigate("/books");
     } catch {
-      alert("Failed to update the book.");
+      toast.success("Failed to update the book.");
     }
   };
 

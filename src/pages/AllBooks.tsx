@@ -3,6 +3,7 @@ import { useDeleteBookMutation, useGetBooksQuery } from "../redux/api/baseApi";
 import type { IBook } from "../types";
 import { Edit, Trash2, View } from "lucide-react";
 import Loading from "../components/Loading";
+import toast from "react-hot-toast"; // Import toast
 
 const AllBooks = () => {
   const navigate = useNavigate();
@@ -23,16 +24,50 @@ const AllBooks = () => {
   }
 
   const handleDelete = async (id: string) => {
-    const confirm = window.confirm("Are you sure you want to delete this book?");
-    if (confirm) {
-      try {
-        await deleteBook(id).unwrap();
-        alert("Book deleted successfully!");
-      } catch (err) {
-        alert("Failed to delete book.");
-        console.error("Delete book error:", err);
-      }
-    }
+    // Using react-hot-toast.confirm for a more integrated confirmation dialog
+    toast.custom((t) => (
+      <div className={`${t.visible ? 'animate-enter' : 'animate-leave'}
+        max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}>
+        <div className="flex-1 w-0 p-4">
+          <div className="flex items-center">
+            <div className="flex-shrink-0 pt-0.5">
+              <Trash2 className="h-6 w-6 text-red-500" aria-hidden="true" />
+            </div>
+            <div className="ml-3 flex-1">
+              <p className="text-sm font-medium text-gray-900">
+                Confirm Deletion
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex border-l border-gray-200">
+          <button
+            onClick={() => {
+              toast.dismiss(t.id);
+              // If confirmed, proceed with deletion
+              (async () => {
+                try {
+                  await deleteBook(id).unwrap();
+                  toast.success("Book deleted successfully!");
+                } catch (err) {
+                  toast.error("Failed to delete book.");
+                  console.error("Delete book error:", err);
+                }
+              })();
+            }}
+            className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-red-600 hover:text-red-800 focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+            Delete
+          </button>
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    ), { duration: Infinity }); // Make the custom toast persistent until user action
   };
 
 
@@ -85,7 +120,6 @@ const AllBooks = () => {
                       <Trash2 />
                     </button>
                     <button onClick={() => handleView(book._id!)} className="text-yellow-500 hover:text-yellow-700 px-2 py-1 rounded">
-                      
                       <View/>
                     </button>
                     <button onClick={() => handleBorrow(book._id!)} className="bg-green-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">
