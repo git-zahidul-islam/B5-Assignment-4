@@ -10,6 +10,8 @@ import {
 import { useCreateBooksMutation } from "../redux/api/baseApi";
 import type { IBook } from "../types";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
 
 const initialForm: IBook = {
   title: "",
@@ -25,7 +27,7 @@ const AddBook = () => {
   const [form, setForm] = useState<IBook>(initialForm);
   const [createBook, { isLoading }] =
     useCreateBooksMutation();
-
+  const navigate = useNavigate()
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -45,7 +47,7 @@ const AddBook = () => {
     try {
       await createBook(form).unwrap();
       setForm(initialForm);
-      toast.success("Book added successfully!"); // Success toast
+      navigate('/books');
     } catch (err) {
       console.log("Failed to add book:", err);
       toast.error("Failed to add book. Please try again."); // Error toast
